@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="en"><Esri><CreaDate>20180817</CreaDate><CreaTime>15502900</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="c:\program files (x86)\arcgis\desktop10.3\ArcToolbox\Toolboxes\Spatial Analyst Tools.tbx\Minus" Date="20180817" Time="155029">Minus C:\Users\Sherbaz\Desktop\GIS\dem.tif C:\Users\Sherbaz\Desktop\GIS\L8_456.tif C:\Users\Sherbaz\Desktop\GIS\Minus_dem1</Process></lineage></DataProperties></Esri></metadata>
