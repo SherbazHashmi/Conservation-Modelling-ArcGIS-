@@ -111,7 +111,56 @@ def fill(in_surface_raster, outputSurfaceRaster):
 
 
 #Combining The Buffers and Vegetation
-initialConservationModel = (Raster(saveLocation+"/Conservation_Model/unique_1") * 0.33) + (Raster(saveLocation+"buffstream") * 0.33) + (Raster(saveLocation+"buffroad2") * 0.33)
-initialConservationModel.save(saveLocation+"consm1")
+#initialConservationModel = (Raster(saveLocation+"/Conservation_Model/unique_1") * 0.33) + (Raster(saveLocation+"buffstream") * 0.33) + (Raster(saveLocation+"buffroad2") * 0.33)
+#initialConservationModel.save(saveLocation+"consm1")
+
+#Euclidian Distance
 
 #Setting 0s to NODATA in streamnet grid for EuDistance
+#nodataStreamnet= SetNull(Raster(saveLocation+"streamnet_1") < 1,1)
+#nodataStreamnet.save("streamnet_3")
+
+#Calculating EU Distance
+#euDistanceRaster = EucDistance(Raster("streamnet_3"), cell_size = 30)
+#euDistanceRaster.save("eucstream")
+
+#fuzzStream = Con(Raster("eucstream") <= 30, 0, Con(Raster("eucstream") >= 300, 1, (Raster("eucstream") - 30.0) / (300.0 - 30.0)))
+#fuzzStream.save("fuzzstream")
+
+#Creating Fuzzy Buffers for Roads and Unique Vegetation
+
+#Vegetation and Vegetation
+# Setting anything under 1 to a no data in preperation for EuDistance
+#nodataUnique = SetNull(Raster(saveLocation+"Conservation_Model/unique_1")<1,1)
+#nodataUnique.save(saveLocation+"unique_2")
+
+#nodataRoads = SetNull(Raster(saveLocation+"roadgrid2")<1,1)
+#nodataRoads.save(saveLocation+"roadgrid3")
+
+#Calculating EU Distance
+#euDistanceRasterRoads = EucDistance(Raster("roadgrid3"), cell_size = 30)
+#euDistanceRasterRoads.save("eucroads")
+
+#euDistanceRasterUnique = EucDistance(Raster("unique_2"), cell_size = 30)
+#euDistanceRasterUnique.save("eucunique")
+
+# Rescaling the Figures to give a "Fuzzy" range of 0.0 to 1.0
+
+#fuzzRoads = Con(Raster("eucroads") <= 30, 0, Con(Raster("eucroads") >= 300, 1, (Raster("eucroads") - 30.0) / (300.0 - 30.0)))
+#fuzzUnique = Con(Raster("eucunique") <= 30, 0, Con(Raster("eucunique") >= 300, 1, (Raster("eucunique") - 30.0) / (300.0 - 30.0)))
+
+#fuzzRoads.save(saveLocation+"fuzzroads")
+#fuzzUnique.save(saveLocation + "fuzzunique")
+
+
+#CONSERVATION MCE
+# MCE Calculation Combining all Fuzzy Rasters to Build Fuzzy Conservation Model
+#fuzzyConservationModel = (Raster(saveLocation+"fuzzstream") * 0.33) + (Raster(saveLocation+"fuzzroads") * 0.33) + (Raster(saveLocation+"fuzzunique") * 0.33)
+#fuzzyConservationModel.save(saveLocation + "fuzz_cons1")
+
+
+
+
+
+
+
