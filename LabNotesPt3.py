@@ -13,6 +13,7 @@ import arcpy
 from arcpy import env
 from arcpy.sa import *
 from arcpy import PolygonToRaster_conversion
+from arcpy import Append_management
 
 
 arcpy.CheckOutExtension('Spatial')
@@ -111,8 +112,8 @@ env.workspace = "C:/Users/Sherbaz/Desktop/GIS/"
 # Maximum Value = 261 Hence to Scale we are going to divide the values in raster
 # by 261
 
-indigenousRasterScaled = Raster("ASDST_P.tif") / 261.0
-indigenousRasterScaled.save("Fuzz_Indg")
+#indigenousRasterScaled = Raster("ASDST_P.tif") / 261.0
+#indigenousRasterScaled.save("Fuzz_Indg")
 
 
 
@@ -136,15 +137,155 @@ indigenousRasterScaled.save("Fuzz_Indg")
 
 #Slope Raster : slope2 already saved from prior step
 
-slopeCost = 1 / Raster("slope2")
-slopeCost.save("slopeCost")
+#slopeCost = 1 / Raster("slope2")
+#slopeCostStandardised = (slopeCost / (slopeCost.maximum)   )
+#slopeCostStandardised.save("slopeCost2")
 
-distanceCost
+# Distance Cost =  1 / EuDistnace AggTracksRoads
+
+# Combining Road and Track Rasters with Buffers
+##aggTrackRoad = Raster("roadgrid3") # + Raster("trackGrid")
+##aggTrackRoad.save("aggTrackRoad")
+
+#EuDistance
+
+##euDistanceTrackRoad = EucDistance(Raster("aggTrackRoad"), cell_size = 30)
+##euDistanceTrackRoad.save("euctrackroad")
+
+#Standardise EuDistance with FuzzyStreamBufferEquation
+
+#fuzzTrackRoad = Con(Raster("euctrackroad") <= 30, 0, Con(Raster("euctrackroad") >= 300, 1, (Raster("euctrackroad") - 30.0) / (300.0 - 30.0)))
+#fuzzTrackRoad.save("fuzzroad")
+
+#Inverse of FuzzTrackRoad
+
+#distanceCost = 1 -  Raster("fuzzroad")
+#distanceCost.save("distanceCost")
+
+# Merging Costs each with 0.5 weighting
+
+#cost = (slopeCostStandardised * 0.5) + (Raster("distanceCost") * 0.5)
+#cost.save("cost2")
+
+# Value
+
+# Logic : The Higher Up There will Be Better Views (Hence More Value)
+# Note : Need to standardise from 0-1
+
+#dem = Raster("dem.tif")
+#minimum = dem.minimum
+#maximum = dem.maximum
+#elevationValue = (dem - minimum) / (maximum - minimum)
+#elevationValue.save("viewValue")
+
+#Aspect Model : Solar Passive Housing
+# Aspect Gives you Which Way it is Facing
+# Assuming North is 180 - 270 then we can use reclassification to see how well
+# the aspect is.
+# Group that with the Trees in the Are which coukld potentially block the sun
+# from coming in
+
+
+#aspect = Aspect("dem.tif")
+#aspect.save("aspect")
+
+#Standardised Raster
+
+#newRaster = Con(((aspect >= 90) & (aspect <= 270)),1,0)
+#newRaster.save("solarpassive2")
+
+
+#value = (Raster("solarpassive2") * 0.5)+ (Raster("viewValue") * 0.5)
+#value.save("value")
+
+#buildingModel = (Raster("value") * 0.5) + (Raster("cost2") * 0.5)
+#buildingModel.save("buildmodel2")
+
+
+#Fire Model
+
+#Fire intensity is calculated by a worst case situation
+# 1. Construct Extreme Climactic Conditions
+#   - Calculate days since rain : 15
+#   - Calculate Last Rain Fall Event 4mm
+# 2. Determine McArthur Drought Index: 10
+# 3. Apply the other constructed parameters
+#   - Temperature : 380C
+#   - Relative Humidity : 15%
+#   - Wind Speed : 40Km/Hr
+# 4. Produce a Fire Danger Index According to the conditions : 74.
+# 5. Determine Rate of Spread for Fuel Quantities (according to the Fire Hazard Maps)
+# 5. Fire intensity can be calcualted using the equation :
+#   I = H x R x W
+#   I : Intensity in Kw/m
+#   H : Heat output in Kj/Kg of fuel
+#   W : Weight of the avaibale fuel in kg/m^3
+#   R : The Expected Rate of Spread.
+
+# Setting Up H R W
+#heatOutput = 18600.0
+#veg = Raster("veg2_1")
+#weightOfAvailableFuel = Con(((veg == 5) | (veg == 6)), 0.5, Con(veg == 3, 1.5,Con(veg == 1, 1.25,0)))
+#rateOfSpread =  Con(((veg == 5) | (veg == 6)), 0.108, Con(veg == 3, 0.328,Con(veg == 1, 1.25,0.583)))
+#slope = Raster("dem.tif")
+# Calculating NewROS with Noble et al., 1980 Method
+
+#newRateOfSpread = rateOfSpread * Exp(0.0693 * slope)
+
+#Creating Fire Intensity Raster
+
+#fireIntensity = heatOutput * weightOfAvailableFuel * newRateOfSpread
+#fireIntensity.save("nstd_fimod")
+
+#Setting Smaller Maximum to Make Data Nicer on Map
+#smallerMaximum = Con(fireIntensity > 10000, 10000,fireIntensity)
+#smallerMaximum.save("smallmaxfimod")
+
+#Making it Boolean
+#boolFireModel = Con(smallerMaximum == 10000, 1,0)
+#boolFireModel.save("firemod")
+
+
+# Flood Model
+# Slope Model : Steeper means water can't reach if it does flood "too steep to flood"
+# Stream Buffer : How far away you can build from a stream
+# Multiplying them together gives a 0 1 value.
+# Inverting it gives the correct value
+
+# Finding Streams of Order 5 (Mongolo which is highest risk)
+
+#streamOrder = StreamOrder(Raster("streamnet_3"),Raster("flow_dir2"),"STRAHLER")
+#streamOrder.save("stream_o")
+
+#unbufferedMongolo = Con(streamOrder == 5 ,1,0)
+#noDataUnbufferedMongolo = SetNull(unbufferedMongolo == 0, 1)
+#noDataUnbufferedMongolo.save("ndunbuffmon")
+
+# Expanding the High Risk Stream
+#bufferedMongolo = Expand(noDataUnbufferedMongolo,3,1)
+floodRisk1 = Con(IsNull(bufferedMongolo),0,1)
+floodRisk1.save("floodrisk_1")
+
+
+# Handling the Other Streams (Using BuffStream)
+floodRisk2 = Raster("buffstream")
+
+# Adding 2 and 3 Together
+
+floodRisk3 = Con((floodRisk1 == floodRisk2) & (floodRisk1 ==1),1,floodRisk1 + floodRisk2)
+floodRisk3.save("floodrisk_3")
 
 
 
+# Creating Slope Component
+# Logic : Slopes are greater than 10 degres (too steep to flood) classed as 1
+#         Slopes less than or equal to 10 degrees (can flood)
 
+slopeFlood = Con(Raster("slope2") >10, 1,0)
+slopeFlood.save("slope_flood")
 
+floodModel = 1 - (Raster("floodrisk_3") * Raster("slope_flood"))
+floodModel.save("floodrisk")
 
 
 
