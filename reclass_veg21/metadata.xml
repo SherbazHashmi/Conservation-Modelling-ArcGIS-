@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="en"><Esri><CreaDate>20181022</CreaDate><CreaTime>21150100</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="c:\program files (x86)\arcgis\desktop10.3\ArcToolbox\Toolboxes\Spatial Analyst Tools.tbx\Reclassify" Date="20181022" Time="211501">Reclassify veg2_1 VALUE "1 10;2 10;3 15;4 0;5 5;6 10;7 15;8 0" C:/Users/Sherbaz/Desktop/GIS\Reclass_veg21 DATA</Process></lineage></DataProperties></Esri></metadata>

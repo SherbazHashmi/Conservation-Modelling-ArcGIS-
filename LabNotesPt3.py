@@ -143,14 +143,34 @@ env.workspace = "C:/Users/Sherbaz/Desktop/GIS/"
 
 # Distance Cost =  1 / EuDistnace AggTracksRoads
 
+#arcpy.env.extent = Raster("dem.tif").extent
 # Combining Road and Track Rasters with Buffers
-##aggTrackRoad = Raster("roadgrid3") # + Raster("trackGrid")
-##aggTrackRoad.save("aggTrackRoad")
+#arcpy.PolylineToRaster_conversion("Minor_roads.shp","FID","minorroadsr","MAXIMUM_COMBINED_LENGTH","NONE",30)
+#arcpy.PolylineToRaster_conversion("Highway.shp","FID","highwayr","MAXIMUM_COMBINED_LENGTH","NONE",30)
+
+#highways = Con(IsNull("highwayr"),0,1)
+#highways.save("highway")
+#minorroadsr = Con(IsNull("minorroadsr"),0,1)
+#minorroadsr.save("minroads")
+
+#aggTrackRoad = Raster("roadgrid2") + Raster("highway") + Raster("minroads")
+
+#aggTrackRoad.save("finalroads")
+
+# Final Roads Conversion
+#reclassRoads = Reclassify("finalroads","Value",RemapValue([[0,0],[1,1],[2,1]]))
+#reclassRoads.save("roadsv2")
+
+# Nullify Roads
+
+#nullRoads= SetNull(reclassRoads == 0,1)
+#nullRoads.save("roadsv3")
 
 #EuDistance
 
-##euDistanceTrackRoad = EucDistance(Raster("aggTrackRoad"), cell_size = 30)
-##euDistanceTrackRoad.save("euctrackroad")
+#euDistanceTrackRoad = EucDistance(Raster("roadsv3"), cell_size = 30)
+#euDistanceTrackRoad.save("euctrackroad")
+
 
 #Standardise EuDistance with FuzzyStreamBufferEquation
 
@@ -195,11 +215,11 @@ env.workspace = "C:/Users/Sherbaz/Desktop/GIS/"
 #newRaster.save("solarpassive2")
 
 
-#value = (Raster("solarpassive2") * 0.5)+ (Raster("viewValue") * 0.5)
+#value = (newRaster * 0.5)+ (Raster("viewValue") * 0.5)
 #value.save("value")
 
 #buildingModel = (Raster("value") * 0.5) + (Raster("cost2") * 0.5)
-#buildingModel.save("buildmodel2")
+#buildingModel.save("buildmodel3")
 
 
 #Fire Model
@@ -221,14 +241,30 @@ env.workspace = "C:/Users/Sherbaz/Desktop/GIS/"
 #   H : Heat output in Kj/Kg of fuel
 #   W : Weight of the avaibale fuel in kg/m^3
 #   R : The Expected Rate of Spread.
+#     ................Weight..............ROS............
+#    |3|DS2 Dry    |       1.5       |      0.467        .
+#    |1|Pine       |     0.5 - 1.5   |       0.583       .
+#    |2|Urban      |     1           |          1        .
+#    |4|B  Ground  |      0          |       0           .
+#    |5|M Grassland|     0.5         |       0.108       .
+#    |6|D Grassland|       1         |        0.200      .
+#    |7|Woodland  |        1.5       |         0.583     .
+#    |8|Water     |         0        |      0            .
+#
+#
+
+#http://www.nrcresearchpress.com/doi/pdf/10.1139/b82-048
 
 # Setting Up H R W
 #heatOutput = 18600.0
 #veg = Raster("veg2_1")
-#weightOfAvailableFuel = Con(((veg == 5) | (veg == 6)), 0.5, Con(veg == 3, 1.5,Con(veg == 1, 1.25,0)))
-#rateOfSpread =  Con(((veg == 5) | (veg == 6)), 0.108, Con(veg == 3, 0.328,Con(veg == 1, 1.25,0.583)))
+#weightOfAvailableFuelInt = Reclassify(Raster("veg2_1"),"VALUE",RemapValue([[1,10],[2,10],[3,15],[4,0],[5,5],[6,10],[7,15],[8,0]]))
+#weightOfAvailableFuel = weightOfAvailableFuelInt / 10;
+#rateOfSpreadInt = Reclassify(Raster("veg2_1"),"VALUE",[[1,583],[2,1000],[3,486],[4,0],[5,108],[6,200],[7,583],[8,0]])
+#rateOfSpread = rateOfSpreadInt / 1000
 #slope = Raster("dem.tif")
-# Calculating NewROS with Noble et al., 1980 Method
+#Calculating NewROS with Noble et al., 1980 Method
+
 
 #newRateOfSpread = rateOfSpread * Exp(0.0693 * slope)
 
@@ -255,25 +291,40 @@ env.workspace = "C:/Users/Sherbaz/Desktop/GIS/"
 # Finding Streams of Order 5 (Mongolo which is highest risk)
 
 #streamOrder = StreamOrder(Raster("streamnet_3"),Raster("flow_dir2"),"STRAHLER")
-#streamOrder.save("stream_o")
+#streamOrder.save("streamo")
 
-#unbufferedMongolo = Con(streamOrder == 5 ,1,0)
-#noDataUnbufferedMongolo = SetNull(unbufferedMongolo == 0, 1)
-#noDataUnbufferedMongolo.save("ndunbuffmon")
+#for i in range()
+#Handling Order 5
+#unbufferedFive = Con(streamOrder == 5 ,1,0)
+#noDataUnbufferedFive = SetNull(unbufferedFive == 0, 1)
+#bufferedFive = Expand(noDataUnbufferedFive,3,1)
+#floodRisk1Five = Con(IsNull(bufferedFive),0,1)
 
-# Expanding the High Risk Stream
-#bufferedMongolo = Expand(noDataUnbufferedMongolo,3,1)
-floodRisk1 = Con(IsNull(bufferedMongolo),0,1)
-floodRisk1.save("floodrisk_1")
+#Handling Order 6
+#unbufferedSix = Con(streamOrder == 6 ,1,0)
+#noDataUnbufferedSix = SetNull(unbufferedSix == 0, 1)
+#bufferedSix = Expand(noDataUnbufferedSix,3,1)
+#floodRisk1Six = Con(IsNull(bufferedSix),0,1)
+
+#Handling Order 7
+#unbufferedSeven = Con(streamOrder == 7 ,1,0)
+#noDataUnbufferedSeven = SetNull(unbufferedSeven == 0, 1)
+#bufferedSeven = Expand(noDataUnbufferedSeven,3,1)
+#floodRisk1Seven = Con(IsNull(bufferedSeven),0,1)
+
+#floodRiskFinal = floodRisk1Five + floodRisk1Six + floodRisk1Seven
+#floodRiskFinal.save("floodriskag_1")
+
+# floodRisk1.save("floodrisk_1")
 
 
 # Handling the Other Streams (Using BuffStream)
-floodRisk2 = Raster("buffstream")
+#floodRisk2 = Raster("buffstream")
 
 # Adding 2 and 3 Together
 
-floodRisk3 = Con((floodRisk1 == floodRisk2) & (floodRisk1 ==1),1,floodRisk1 + floodRisk2)
-floodRisk3.save("floodrisk_3")
+#floodRisk3 = Con((floodRiskFinal == 0) & (floodRisk2 == 0),0,1)
+#floodRisk3.save("floodrisk_3")
 
 
 
@@ -281,12 +332,16 @@ floodRisk3.save("floodrisk_3")
 # Logic : Slopes are greater than 10 degres (too steep to flood) classed as 1
 #         Slopes less than or equal to 10 degrees (can flood)
 
-slopeFlood = Con(Raster("slope2") >10, 1,0)
-slopeFlood.save("slope_flood")
+#slopeFlood = Con(Raster("slope2") >10, 0,1)
+#slopeFlood.save("slope_flood")
 
-floodModel = 1 - (Raster("floodrisk_3") * Raster("slope_flood"))
-floodModel.save("floodrisk")
-
-
+#floodModel = 1 - (Raster("floodrisk_3") * Raster("slope_flood"))
+#floodModel.save("finalflood")
 
 
+#constrainedBuildingModel = Raster("finalflood") * Raster("firemod");
+#constrainedBuildingModel.save("conbModel")
+
+#Creating MOLA
+MOLA = HighestPosition([(1.4 * Raster("fuzz_cons1")),(1 * Raster("ag_model_1")), (1.2 * Raster("foroval_2")), (1.3 *Raster("Fuzz_Indg")),(1 * Raster("conbModel"))])
+MOLA.save("finalMola")
