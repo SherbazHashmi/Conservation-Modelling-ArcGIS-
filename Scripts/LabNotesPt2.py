@@ -1,12 +1,17 @@
 #-------------------------------------------------------------------------------
-# Name:        module1
-# Purpose:
+# Name:        Lab Notes Pt2
+# Purpose:     Producing a Conservation Model 
 #
 # Author:      Sherbaz
 #
 # Created:     31/08/2018
 # Copyright:   (c) Sherbaz 2018
-# Licence:     <your licence>
+# Comments:    Note, this document does not demonstrate good programming 
+# principles. This was due to the nature of the assessment and my 
+# learning curve . The assement required a formal write up inclduing a description of the process.
+# Therefore I decided to reuse code to a high degree for ease of interpretation
+# during the write up.
+#  
 #-------------------------------------------------------------------------------
 
 import arcpy
@@ -52,38 +57,38 @@ def fill(in_surface_raster, outputSurfaceRaster):
 
 # Running Flow Direction the First Time
 
-#inputSurfaceRaster = "dem.tif"
-#flowD = flowDirection(inputSurfaceRaster,"flow_dir");
+inputSurfaceRaster = "dem.tif"
+flowD = flowDirection(inputSurfaceRaster,"flow_dir");
 
 # Sinking
-#sink(flowD, "sinks")
+sink(flowD, "sinks")
 
 # Filling
 
-#fill(inputSurfaceRaster, "fill_dem")
+fill(inputSurfaceRaster, "fill_dem")
 
 # Rerunning Flow Direction
 
-#flowDirection("fill_dem","flow_dir2")
+flowDirection("fill_dem","flow_dir2")
 
 # Flow Accumulation
 
-#FlowAccumulation("flow_dir2").save(saveLocation+"flow_acc")
+FlowAccumulation("flow_dir2").save(saveLocation+"flow_acc")
 
 
 
 #Creating A Stream Location Raster
 
-#outputRaster = Con(Raster("flow_acc") >=100,1,0)
-#outputRaster.save(saveLocation+"streamnet_1")
+outputRaster = Con(Raster("flow_acc") >=100,1,0)
+outputRaster.save(saveLocation+"streamnet_1")
 
 
 #Stream Buffers
 # Decision Based On : http://www.water.nsw.gov.au/__data/assets/pdf_file/0004/547222/licensing_approvals_controlled_activities_riparian_corridors.pdf
 # 60 meters on either side of the stream (2 pixels (30))
 
-#streambuffers = Expand("streamnet_1",'2',1)
-#streambuffers.save(saveLocation+ "buffstream")
+streambuffers = Expand("streamnet_1",'2',1)
+streambuffers.save(saveLocation+ "buffstream")
 
 #Road Buffers
 
@@ -91,9 +96,9 @@ def fill(in_surface_raster, outputSurfaceRaster):
 
 #Extent environment will only process features or rasters that fall within the extent specified setting.
    #Getting the Extent of dem.tif
-#demRaster = arcpy.sa.Raster(saveLocation+"dem.tif")
+demRaster = arcpy.sa.Raster(saveLocation+"dem.tif")
    # Setting Current Environment Extent to Dem.
-#arcpy.env.extent = demRaster.extent
+arcpy.env.extent = demRaster.extent
 
 #Converting to Raster
 #arcpy.PolylineToRaster_conversion("Main_roads.shp","FID",saveLocation+"roadgrid","MAXIMUM_COMBINED_LENGTH","NONE",30)
@@ -102,61 +107,63 @@ def fill(in_surface_raster, outputSurfaceRaster):
 # into a single cell value. We need to change background values to 0s
 # as at the moment they are NODATA cells.
 
-#changedRoadgrid = Con(IsNull("roadgrid"),0,1)
-#changedRoadgrid.save(saveLocation + "roadgrid2")
+changedRoadgrid = Con(IsNull("roadgrid"),0,1)
+changedRoadgrid.save(saveLocation + "roadgrid2")
 
 # Using Expand tool to buffer the main roads
-#roadBuffers = Expand("roadgrid2",'2',1)
-#roadBuffers.save(saveLocation + "buffroad2")
+roadBuffers = Expand("roadgrid2",'2',1)
+roadBuffers.save(saveLocation + "buffroad2")
 
 
 #Combining The Buffers and Vegetation
-#initialConservationModel = (Raster(saveLocation+"/Conservation_Model/unique_1") * 0.33) + (Raster(saveLocation+"buffstream") * 0.33) + (Raster(saveLocation+"buffroad2") * 0.33)
-#initialConservationModel.save(saveLocation+"consm1")
+initialConservationModel = (Raster(saveLocation+"/Conservation_Model/unique_1") * 0.33) + (Raster(saveLocation+"buffstream") * 0.33) + (Raster(saveLocation+"buffroad2") * 0.33)
+initialConservationModel.save(saveLocation+"consm1")
 
 #Euclidian Distance
 
 #Setting 0s to NODATA in streamnet grid for EuDistance
-#nodataStreamnet= SetNull(Raster(saveLocation+"streamnet_1") < 1,1)
-#nodataStreamnet.save("streamnet_3")
+nodataStreamnet= SetNull(Raster(saveLocation+"streamnet_1") < 1,1)
+nodataStreamnet.save("streamnet_3")
 
 #Calculating EU Distance
-#euDistanceRaster = EucDistance(Raster("streamnet_3"), cell_size = 30)
-#euDistanceRaster.save("eucstream")
+euDistanceRaster = EucDistance(Raster("streamnet_3"), cell_size = 30)
+euDistanceRaster.save("eucstream")
 
-#fuzzStream = Con(Raster("eucstream") <= 30, 0, Con(Raster("eucstream") >= 300, 1, (Raster("eucstream") - 30.0) / (300.0 - 30.0)))
-#fuzzStream.save("fuzzstream")
+fuzzStream = Con(Raster("eucstream") <= 30, 0, Con(Raster("eucstream") >= 300, 1, (Raster("eucstream") - 30.0) / (300.0 - 30.0)))
+fuzzStream.save("fuzzstream")
 
 #Creating Fuzzy Buffers for Roads and Unique Vegetation
 
 #Vegetation and Vegetation
 # Setting anything under 1 to a no data in preperation for EuDistance
-#nodataUnique = SetNull(Raster(saveLocation+"Conservation_Model/unique_1")<1,1)
-#nodataUnique.save(saveLocation+"unique_2")
 
-#nodataRoads = SetNull(Raster(saveLocation+"roadgrid2")<1,1)
-#nodataRoads.save(saveLocation+"roadgrid3")
+nodataUnique = SetNull(Raster(saveLocation+"Conservation_Model/unique_1")<1,1)
+nodataUnique.save(saveLocation+"unique_2")
+
+nodataRoads = SetNull(Raster(saveLocation+"roadgrid2")<1,1)
+nodataRoads.save(saveLocation+"roadgrid3")
 
 #Calculating EU Distance
-#euDistanceRasterRoads = EucDistance(Raster("roadgrid3"), cell_size = 30)
-#euDistanceRasterRoads.save("eucroads")
+euDistanceRasterRoads = EucDistance(Raster("roadgrid3"), cell_size = 30)
+euDistanceRasterRoads.save("eucroads")
 
-#euDistanceRasterUnique = EucDistance(Raster("unique_2"), cell_size = 30)
-#euDistanceRasterUnique.save("eucunique")
+euDistanceRasterUnique = EucDistance(Raster("unique_2"), cell_size = 30)
+euDistanceRasterUnique.save("eucunique")
 
 # Rescaling the Figures to give a "Fuzzy" range of 0.0 to 1.0
 
-#fuzzRoads = Con(Raster("eucroads") <= 30, 0, Con(Raster("eucroads") >= 300, 1, (Raster("eucroads") - 30.0) / (300.0 - 30.0)))
-#fuzzUnique = Con(Raster("eucunique") <= 30, 0, Con(Raster("eucunique") >= 300, 1, (Raster("eucunique") - 30.0) / (300.0 - 30.0)))
+fuzzRoads = Con(Raster("eucroads") <= 30, 0, Con(Raster("eucroads") >= 300, 1, (Raster("eucroads") - 30.0) / (300.0 - 30.0)))
+fuzzUnique = Con(Raster("eucunique") <= 30, 0, Con(Raster("eucunique") >= 300, 1, (Raster("eucunique") - 30.0) / (300.0 - 30.0)))
 
-#fuzzRoads.save(saveLocation+"fuzzroads")
-#fuzzUnique.save(saveLocation + "fuzzunique")
+fuzzRoads.save(saveLocation+"fuzzroads")
+fuzzUnique.save(saveLocation + "fuzzunique")
 
 
 #CONSERVATION MCE
 # MCE Calculation Combining all Fuzzy Rasters to Build Fuzzy Conservation Model
-#fuzzyConservationModel = (Raster(saveLocation+"fuzzstream") * 0.33) + (Raster(saveLocation+"fuzzroads") * 0.33) + (Raster(saveLocation+"fuzzunique") * 0.33)
-#fuzzyConservationModel.save(saveLocation + "fuzz_cons1")
+
+fuzzyConservationModel = (Raster(saveLocation+"fuzzstream") * 0.33) + (Raster(saveLocation+"fuzzroads") * 0.33) + (Raster(saveLocation+"fuzzunique") * 0.33)
+fuzzyConservationModel.save(saveLocation + "fuzz_cons1")
 
 
 
