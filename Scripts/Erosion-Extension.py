@@ -122,15 +122,13 @@ env.workspace = "C:/Users/Sherbaz/Desktop/GIS/"
 
 
 ##################################
-# Extension #2, LAB NOTES PT 5
+# Extension #2, LAB NOTES PT 5 (Just Substituted K-Value in Previous Model)
+# Generated K Using Toolbox
 #################################
 
 ##This Extension uses Rasters From National-level soil and lanscape data to run
-## the USLE. Rather
+## the USLE. 
 
-## Creating References to Raster Grids
-
-soc = Raster(env.workspace+"/soil_grids/soc")
 
 
 
