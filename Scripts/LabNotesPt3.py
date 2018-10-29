@@ -347,5 +347,9 @@ constrainedBuildingModel.save("conbModel")
 
 #Creating MOLA
 #
-MOLA = HighestPosition([(1.4 * Raster("fuzz_cons1")),(1 * Raster("ag_model_1")), (1.2 * Raster("foroval_2")), (1.3 *Raster("Fuzz_Indg")),(1 * Raster("conbModel"))])
+MOLA = HighestPosition([(1.4 * Raster("fuzz_cons1")),
+						(1 * Raster("ag_model_1")), 
+						(1.2 * Raster("foroval_2")), 
+						(1.3 *Raster("Fuzz_Indg")),
+						(1 * Raster("conbModel"))])
 MOLA.save("finalMola")
