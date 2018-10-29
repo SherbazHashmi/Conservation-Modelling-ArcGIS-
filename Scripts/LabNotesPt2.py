@@ -29,6 +29,7 @@ def reclassification ():
     #Reclassifies the raster.
     outReclass1 = Reclassify("veg2_1","Value",RemapValue([[1,5],[2,0],[3,10],[4,0],[5,8],[6,8],[7,6],[8,0]]))
     outReclass1 = outReclass1 / 10.0
+    outReclass1 = 1 - outReclass1 # Inverting  
 
     #Saves the Reclassified Raster as Unique_2.
     outReclass1.save("C:/Users/Sherbaz/Desktop/GIS/unique_2")
