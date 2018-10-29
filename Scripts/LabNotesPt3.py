@@ -28,9 +28,9 @@ env.workspace = "C:/Users/Sherbaz/Desktop/GIS/"
 #Converting Soils Data into Raster Format
 
 # First Setting Extent to Match the Dem
-##demRaster = arcpy.sa.Raster(env.workspace +"/dem.tif")
-##arcpy.env.extent = demRaster.extent  # (What does this actually mean (?))
-##PolygonToRaster_conversion("Soils_Canberra.shp","LANDSCAPE", env.workspace + "/Soils2", "CELL_CENTER",  "NONE", 30)
+demRaster = arcpy.sa.Raster(env.workspace +"/dem.tif")
+arcpy.env.extent = demRaster.extent  # (What does this actually mean (?))
+PolygonToRaster_conversion("Soils_Canberra.shp","LANDSCAPE", env.workspace + "/Soils2", "CELL_CENTER",  "NONE", 30)
 
 # Reclassifying the Soil Types to Rank the Soils2 Raster
 remappedValues =[['COca', 2], ['TRba', 4], ['ERcc', 5], ['TRwi', 2],
@@ -345,11 +345,3 @@ floodModel.save("finalflood")
 constrainedBuildingModel = Raster("finalflood") * Raster("firemod");
 constrainedBuildingModel.save("conbModel")
 
-#Creating MOLA
-#
-MOLA = HighestPosition([(1.4 * Raster("fuzz_cons1")),
-						(1 * Raster("ag_model_1")), 
-						(1.2 * Raster("foroval_2")), 
-						(1.3 *Raster("Fuzz_Indg")),
-						(1 * Raster("conbModel"))])
-MOLA.save("finalMola")

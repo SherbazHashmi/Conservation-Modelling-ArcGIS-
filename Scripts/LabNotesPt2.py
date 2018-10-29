@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # Name:        Lab Notes Pt2
-# Purpose:     Producing a Conservation Model 
+# Purpose:     Producing a Conservation Model
 #
 # Author:      Sherbaz
 #
@@ -8,7 +8,7 @@
 # Copyright:   (c) Sherbaz 2018
 # Comments:   Ignore All Commented Code that are
 #             not notes as It Was Not Used in Assessment
-#  
+#
 #-------------------------------------------------------------------------------
 
 import arcpy
@@ -30,8 +30,8 @@ def reclassification ():
     outReclass1 = Reclassify("veg2_1","Value",RemapValue([[1,5],[2,0],[3,10],[4,0],[5,8],[6,8],[7,6],[8,0]]))
     outReclass1 = outReclass1 / 10.0
 
-    #Saves the Reclassified Raster as Unique_1.
-    outReclass1.save("C:/Users/Sherbaz/Desktop/GIS/unique_1")
+    #Saves the Reclassified Raster as Unique_2.
+    outReclass1.save("C:/Users/Sherbaz/Desktop/GIS/unique_2")
 
 def flowDirection(inputSurfaceRaster,outFlowDirectionLocation):
     # Perform Flow Direction Calculation
@@ -52,6 +52,8 @@ def fill(in_surface_raster, outputSurfaceRaster):
     print(saveLocation+outputSurfaceRaster)
     return outputSurfaceRaster
 
+# Reclassifying Veg2
+reclassification();
 
 # Running Flow Direction the First Time
 
@@ -160,7 +162,7 @@ fuzzRoads.save(saveLocation+"fuzzroads")
 #CONSERVATION MCE
 # MCE Calculation Combining all Fuzzy Rasters to Build Fuzzy Conservation Model
 
-fuzzyConservationModel = (Raster(saveLocation+"fuzzstream") * 0.33) + (Raster(saveLocation+"fuzzroads") * 0.33) + (Raster(saveLocation+"unique_1") * 0.33)
+fuzzyConservationModel = (Raster(saveLocation+"fuzzstream") * 0.33) + (Raster(saveLocation+"fuzzroads") * 0.33) + (Raster(saveLocation+"unique_2") * 0.33)
 fuzzyConservationModel.save(saveLocation + "fuzz_cons1")
 
 
