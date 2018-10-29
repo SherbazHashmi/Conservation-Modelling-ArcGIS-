@@ -145,7 +145,7 @@ slopeCostStandardised.save("slopeCost2")
 # Distance Cost =  1 / EuDistnace AggTracksRoads
 
 arcpy.env.extent = Raster("dem.tif").extent
-Combining Road and Track Rasters with Buffers
+#Combining Road and Track Rasters with Buffers
 arcpy.PolylineToRaster_conversion("Minor_roads.shp","FID","minorroadsr","MAXIMUM_COMBINED_LENGTH","NONE",30)
 arcpy.PolylineToRaster_conversion("Highway.shp","FID","highwayr","MAXIMUM_COMBINED_LENGTH","NONE",30)
 
@@ -193,15 +193,15 @@ cost.save("cost2")
 # Logic : The Higher Up There will Be Better Views (Hence More Value)
 # Note : Need to standardise from 0-1
 
-#dem = Raster("dem.tif")
-#minimum = dem.minimum
-#maximum = dem.maximum
-#elevationValue = (dem - minimum) / (maximum - minimum)
-#elevationValue.save("viewValue")
+dem = Raster("dem.tif")
+minimum = dem.minimum
+maximum = dem.maximum
+elevationValue = (dem - minimum) / (maximum - minimum)
+elevationValue.save("viewValue")
 
 #Aspect Model : Solar Passive Housing
 # Aspect Gives you Which Way it is Facing
-# Assuming North is 180 - 270 then we can use reclassification to see how well
+# Assuming North is 180 - 270 then wecan use reclassification to see how well
 # the aspect is.
 # Group that with the Trees in the Are which coukld potentially block the sun
 # from coming in
@@ -342,6 +342,6 @@ floodModel = 1 - (Raster("floodrisk_3") * Raster("slope_flood"))
 floodModel.save("finalflood")
 
 
-constrainedBuildingModel = Raster("finalflood") * Raster("firemod");
+constrainedBuildingModel = Raster("finalflood") * Raster("firemod") * Raster("eros-bool-2")
 constrainedBuildingModel.save("conbModel")
 
