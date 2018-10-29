@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # Name:        LabNotesPt3
-# Purpose:	  Producing an Agricultural, Forestry, Indigenous, Building, Constraints
-#  Conservation Models and then creating a MOLA.
+# Purpose:	  Producing an Agricultural, Forestry, Indigenous, Building Constraints
+#  and Conservation Models
 #
 # Author:      Sherbaz
 #

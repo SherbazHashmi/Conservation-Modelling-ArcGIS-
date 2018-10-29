@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # Name:        MOLA
-# Purpose:
+# Purpose:     Creating MOLA with Highest Position
 #
 # Author:      Sherbaz
 #
