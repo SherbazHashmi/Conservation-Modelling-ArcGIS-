@@ -31,11 +31,11 @@ def clipModel (model,output):
     model.save(output)
 
 # Clipping All Models to Study Site
-clipModel(Raster("fuzz_cons1"),"c_fuzz_cons")
-clipModel(Raster("ag_model_1"),"c_ag")
-clipModel(Raster("foroval_2"),"c_for")
-clipModel(Raster("Fuzz_Indg"),"c_ind")
-clipModel(Raster("conbModel"),"c_conb")
+#clipModel(Raster("fuzz_cons1"),"c_fuzz_cons")
+#clipModel(Raster("ag_model_1"),"c_ag")
+#clipModel(Raster("foroval_2"),"c_for")
+#clipModel(Raster("Fuzz_Indg"),"c_ind")
+#clipModel(Raster("conbModel"),"c_conb")
 clipModel(Raster("finalmola"),"c_mola")
 
 

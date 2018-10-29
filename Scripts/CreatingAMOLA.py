@@ -22,9 +22,9 @@ arcpy.CheckOutExtension('Spatial')
 from os.path import isfile, isdir
 env.overwriteOutput = True
 env.workspace = "C:/Users/Sherbaz/Desktop/GIS/"
-MOLA = HighestPosition([(1.4 * Raster("fuzz_cons1")),
+MOLA = HighestPosition([(1.2 * Raster("fuzz_cons1")),
 						(1 * Raster("ag_model_1")),
-						(1.2 * Raster("foroval_2")),
-						(1.3 *Raster("Fuzz_Indg")),
+						(1.1 * Raster("foroval_2")),
+						(1.2 *Raster("Fuzz_Indg")),
 						(1 * Raster("conbModel"))])
 MOLA.save("finalMola")
