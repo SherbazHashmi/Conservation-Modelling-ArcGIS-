@@ -1,6 +1,6 @@
 <PAMDataset>
   <PAMRasterBand band="1">
-    <Description>Aspect_dem2</Description>
+    <Description>Aspect_dem17</Description>
     <Histograms>
       <HistItem>
         <HistMin>-1</HistMin>

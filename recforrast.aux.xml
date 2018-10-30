@@ -1,6 +1,6 @@
 <PAMDataset>
   <PAMRasterBand band="1">
-    <Description>recforrast</Description>
+    <Description>Reclass_veg36</Description>
     <NoDataValue>1.50000000000000E+001</NoDataValue>
     <Histograms>
       <HistItem>
