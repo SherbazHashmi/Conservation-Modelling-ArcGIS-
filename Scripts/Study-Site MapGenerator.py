@@ -32,17 +32,17 @@ def clipModel (model,output):
 
 # Clipping All Models to Study Site
 
-clipModel(Raster("fuzz_cons1"),"c_fuzz_cons")
-clipModel(Raster("ag_model_1"),"c_ag")
-clipModel(Raster("foroval_2"),"c_for")
-clipModel(Raster("Fuzz_Indg"),"c_ind")
-clipModel(Raster("conbModel"),"c_conb")
-clipModel(Raster("finalmola"),"c_mola")
-
+#clipModel(Raster("fuzz_cons1"),"c_fuzz_cons")
+#clipModel(Raster("ag_model_1"),"c_ag")
+#clipModel(Raster("foroval_2"),"c_for")
+#clipModel(Raster("Fuzz_Indg"),"c_ind")
+#clipModel(Raster("conbModel"),"c_conb")
+#clipModel(Raster("finalmola"),"c_mola")
+clipModel(Raster("veg2_1"),"c_veg")
 
 #Clipping Helper Data
-clipModel(Raster("soils3"),"c_soils")
-clipModel(Raster("dem.tif"),"c_dem")
-clipModel(Raster("roadsv3"),"c_roads")
+#clipModel(Raster("soils3"),"c_soils")
+#clipModel(Raster("dem.tif"),"c_dem")
+#clipModel(Raster("roadsv3"),"c_roads")
 
 
